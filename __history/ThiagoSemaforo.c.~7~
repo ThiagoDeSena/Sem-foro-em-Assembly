@@ -1,0 +1,153 @@
+#include <18f4550.h>
+#fuses hs,nowdt,noprotect,nolvp,NOMCLR
+void main()
+{
+ int delay_reg1;// declaração de variáveis
+ int delay_reg2;// declaração de variáveis
+ int dec_reg3;//variável do contador de decremeto para 6s nesta lógica
+ int dec_reg4;//variável do contador de decremeto para 2s nesta lógica
+ int dec_reg5; //variável do contador de decrementi para 8s nesta lógica
+ int dec_reg6;
+ int dec_reg7;
+ int dec_reg8;
+#asm
+goto inicio // vai para label inicio
+Delay100ms:
+  movlw 0xFF //w=255d
+  movwf delay_reg1 // reg1=255d
+  movlw 0xFF // w=255d
+  movwf delay_reg2 // reg2=255d
+loop1:
+  DECFSZ delay_reg1 // decrementa e pula se igual a zero
+  goto loop2
+  goto exit
+loop2:
+  DECFSZ delay_reg2 // decrementa e pula se igual a zero
+  goto loop2
+  goto loop1
+Exit:
+  RETURN
+
+inicio:   
+ movlw  0x00  // 00h= pullup habilitado;80h=pullup desabilitado.
+ movwf  0xFF1 //intcon2=00h
+ movlw  0xFF  //w=11111111b
+ movwf  0xF93  //trisbB=11111111b
+ movlw  0x00 //w=00000000b
+ movwf  0xF95 // trisD=00000000b
+ movlw  0xE6 //w=11100110b
+// movwf  0xFD3 // Oscilador 4Mhz Sem cristal e capacitor $$$$
+//-----------------------------------------------------------------------------------
+
+loop: // testa condição b0=0 (botão pressionado) e b1=1(botão não pressionado)
+movlw 0x08 //pino d3
+movwf 0xF8C // declara latd(tabela)
+btfsc 0xf81.0 //testa o pino 0 da porta b e pula se 1(apertado)
+goto l1   // testa outra condição
+btfss 0xf81.1 //testa o pino 1 da porta b e pula se 0(não apertado)
+goto l1  //testa outra condição
+goto verde1
+goto loop //vai para linha loop
+
+
+l1: // testa condição b0=1 (botão não pressionado) e b1=0(botão pressionado)
+btfss 0xf81.0 //testa o pino 0 da porta b e pula se 0(apertado)
+goto l2  //vai para linha l2
+btfsc 0xf81.1 //testa o pino 1 da porta b e pula se 1(não apertado)
+goto l2 //vai para linha l2
+goto verde1
+goto loop //vai para linha loop
+
+l2:// testa condição b0=0 (botão  pressionado) e b1=0(botão pressionado)
+btfsc 0xf81.0//testa o pino 0 da porta b e pula se 0
+goto desliga //vai para linha desliga
+btfsc 0xf81.1 //testa o pino 1 da porta b e pula se 0
+goto desliga //vai para linha desliga
+//bcf  0xf83.0 liga pino 0 
+goto desliga
+goto loop  //vai para linha loop
+
+desliga:
+bcf  0xf83.0 // desliga o pino 0
+goto loop //vai pra subrotina loop
+
+
+
+
+//----------------------------------------------------------------------------------
+verde1:
+ movlw 0x02 //pino d1
+ movwf 0xF8C // declara latd(tabela)
+ movlw 0xFF // inicia a contagem dos 7 segundos(255) *Ao todo eram 428 sendo dividido em 255 e 173
+ movwf dec_reg3 //(255)
+ //INSERIR CONDIÇÃO DOS BOTÕES AQUI
+ 
+verde2:
+ DECFSNZ dec_reg3
+ goto verde3
+ call Delay100ms
+ goto verde2
+ 
+verde3:
+ movlw 0xAD // continua a contagem dos 7 segundos(173)
+ movwf dec_reg4 //(173)
+ 
+verde4:
+ DECFSNZ dec_reg4
+ goto amarelo1
+ call Delay100ms
+ goto verde4
+ 
+amarelo1:
+ movlw 0x01 //pino d0
+ movwf 0xF8C // declara latd(tabela)
+ movlw 0x7A //conta 2 segundos(122)
+ movwf dec_reg5 //(122)
+ 
+amarelo2:
+ DECFSNZ dec_reg5
+ goto vermelho1
+ call Delay100ms
+ goto amarelo2
+ 
+vermelho1:  //550 no total
+ movlw 0x04 //pino d2
+ movwf 0xF8C // declara latd(tabela)
+ movlw 0xFF //conta 9 segundos(255)
+ movwf dec_reg6 //(255)
+ 
+vermelho2:
+ DECFSNZ dec_reg6
+ goto vermelho3
+ call Delay100ms
+ goto vermelho2
+ 
+vermelho3:
+ movlw 0xFF //conta 9 segundos(255)
+ movwf dec_reg7 //(255)
+ 
+vermelho4:
+ DECFSNZ dec_reg7
+ goto vermelho5
+ call Delay100ms
+ goto vermelho4
+ 
+vermelho5:
+ movlw 0x26 //conta 9 segundos(40)
+ movwf dec_reg8 //(40)
+
+vermelho6:
+ DECFSNZ dec_reg8
+ goto loop
+ call Delay100ms
+ goto vermelho6
+ 
+loop3:
+   clrf    0XF83 // limpa porta d
+   call    Delay100ms // vai pra subrotina Delay100ms
+   movlw   0xff// w=ffh
+   movwf   0XF83 // porta d=11111111b
+   call    Delay100ms // vai pra subrotina Delay100ms
+   goto    loop3 //vai pra subrotina loop
+#endasm
+}

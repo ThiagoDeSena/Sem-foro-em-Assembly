@@ -1,0 +1,89 @@
+000     @SCRATCH
+001     @SCRATCH
+001     _RETURN_
+002     @SCRATCH
+003     @SCRATCH
+005     main.delay_reg1
+006     main.delay_reg2
+007     main.dec_reg3
+008     main.dec_reg4
+009     main.dec_reg5
+00A     main.dec_reg6
+00B     main.dec_reg7
+00C     main.dec_reg8
+F83     PSP_DATA
+FB4.6   C1OUT
+FB4.7   C2OUT
+FBB     CCP_2
+FBB     CCP_2_LOW
+FBC     CCP_2_HIGH
+FBE     CCP_1_LOW
+FBE     CCP_1
+FBF     CCP_1_HIGH
+FE1-FE2 @READ_PACKED_MEMORY.P1
+FE1-FE2 @WRITE_PACKED_MEMORY.P2
+FE9-FEA @WRITE_PROGRAM_MEMORY.P1
+FE9-FEA @READ_PROGRAM_MEMORY.P2
+FE9-FEA @READ_PACKED_MEMORY.P3
+FE9-FEA @WRITE_PACKED_MEMORY.P4
+FF6-FF8 @WRITE_PROGRAM_MEMORY.P1
+FF6-FF8 @READ_PROGRAM_MEMORY.P2
+
+ROM Allocation:
+000004  @cinit1
+000004  main
+000014  @cinit2
+0015  inicio
+000B  Delay100ms
+000E  loop1
+0011  loop2
+0014  exit
+001C  loop
+0024  l1
+0032  verde1
+002A  l2
+0030  desliga
+0036  verde2
+003B  verde3
+003D  verde4
+0042  amarelo1
+0046  amarelo2
+004B  vermelho1
+004F  vermelho2
+0054  vermelho3
+0056  vermelho4
+005B  vermelho5
+005F  vermelho6
+0064  loop3
+
+Project Directory:
+    C:\Users\Thiago de sena\Documents\CCS C Projects\semaforo_Thiago\
+
+Project Files:
+    ThiagoSemaforo.c                                        [29-fev-24 16:52  CRC=CEB31774]
+    ..\..\..\..\..\Program Files (x86)\PICC\Devices\18f4550.h [21-jun-13 16:05  CRC=A157EDDE]
+
+Source signature=1162F330
+
+Units:
+    ThiagoSemaforo (main)
+
+Compiler Settings:
+    Processor:      PIC18F4550
+    Pointer Size:   16
+    ADC Range:      0-255
+    Opt Level:      9
+    Short,Int,Long: UNSIGNED: 1,8,16
+    Float,Double:   32,32
+
+Output Files:
+    XREF file:   ThiagoSemaforo.xsym
+    Errors:      ThiagoSemaforo.err
+    Ext Symbols: ThiagoSemaforo.esym
+    INHX32:      ThiagoSemaforo.hex
+    Symbols:     ThiagoSemaforo.sym
+    List:        ThiagoSemaforo.lst
+    Debug/COFF:  ThiagoSemaforo.cof
+    Project:     ThiagoSemaforo.ccspjt
+    Call Tree:   ThiagoSemaforo.tre
+    Statistics:  ThiagoSemaforo.STA

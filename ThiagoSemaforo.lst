@@ -1,0 +1,281 @@
+CCS PCH C Compiler, Version 5.007, 61971               29-fev-24 17:16
+
+               Filename:   C:\Users\Thiago de sena\Documents\CCS C Projects\semaforo_Thiago\ThiagoSemaforo.lst
+
+               ROM used:   218 bytes (1%)
+                           Largest free fragment is 32550
+               RAM used:   12 (1%) at main() level
+                           12 (1%) worst case
+               Stack used: 0 locations
+               Stack size: 31
+
+*
+0000:  GOTO   0004
+.................... #include <18f4550.h> 
+.................... //////// Standard Header file for the PIC18F4550 device //////////////// 
+.................... #device PIC18F4550 
+....................  
+.................... #list 
+....................  
+.................... #fuses hs,nowdt,noprotect,nolvp,NOMCLR 
+.................... void main() 
+0004:  CLRF   FF8
+0006:  BCF    FD0.7
+0008:  MOVF   FC1,W
+000A:  ANDLW  C0
+000C:  IORLW  0F
+000E:  MOVWF  FC1
+0010:  MOVLW  07
+0012:  MOVWF  FB4
+.................... { 
+....................  int delay_reg1;// declaração de variáveis 
+....................  int delay_reg2;// declaração de variáveis 
+....................  int dec_reg3;//variável do contador de decremeto para 6s nesta lógica 
+....................  int dec_reg4;//variável do contador de decremeto para 2s nesta lógica 
+....................  int dec_reg5; //variável do contador de decrementi para 8s nesta lógica 
+....................  int dec_reg6; 
+....................  int dec_reg7; 
+....................  int dec_reg8; 
+.................... #asm 
+.................... goto inicio // vai para label inicio 
+0014:  BRA    002A
+.................... Delay100ms: 
+....................   movlw 0xFF //w=255d 
+0016:  MOVLW  FF
+....................   movwf delay_reg1 // reg1=255d 
+0018:  MOVWF  05
+....................   movlw 0xFF // w=255d 
+....................   movwf delay_reg2 // reg2=255d 
+001A:  MOVWF  06
+.................... loop1: 
+....................   DECFSZ delay_reg1 // decrementa e pula se igual a zero 
+001C:  DECFSZ 05,F
+....................   goto loop2 
+001E:  BRA    0022
+....................   goto exit 
+0020:  BRA    0028
+.................... loop2: 
+....................   DECFSZ delay_reg2 // decrementa e pula se igual a zero 
+0022:  DECFSZ 06,F
+....................   goto loop2 
+0024:  BRA    0022
+....................   goto loop1 
+0026:  BRA    001C
+.................... Exit: 
+0028:  RETURN 0
+....................   RETURN 
+....................  
+.................... inicio:    
+....................  movlw  0x00  // 00h= pullup habilitado;80h=pullup desabilitado. 
+002A:  MOVLW  00
+....................  movwf  0xFF1 //intcon2=00h 
+002C:  MOVWF  FF1
+....................  movlw  0xFF  //w=11111111b 
+002E:  MOVLW  FF
+....................  movwf  0xF93  //trisbB=11111111b 
+0030:  MOVWF  F93
+....................  movlw  0x00 //w=00000000b 
+0032:  MOVLW  00
+....................  movwf  0xF95 // trisD=00000000b 
+0034:  MOVWF  F95
+....................  movlw  0xE6 //w=11100110b 
+0036:  MOVLW  E6
+.................... // movwf  0xFD3 // Oscilador 4Mhz Sem cristal e capacitor $$$$ 
+.................... //----------------------------------------------------------------------------------- 
+....................  
+.................... loop: // testa condição b0=0 (botão pressionado) e b1=1(botão não pressionado) 
+.................... movlw 0x40 //pino d6 
+0038:  MOVLW  40
+.................... movwf 0xF8C // declara latd(tabela) 
+003A:  MOVWF  F8C
+.................... btfsc 0xf81.0 //testa o pino 0 da porta b e pula se 1(apertado) 
+003C:  BTFSC  F81.0
+.................... goto l1   // testa outra condição 
+003E:  BRA    0048
+.................... btfss 0xf81.1 //testa o pino 1 da porta b e pula se 0(não apertado) 
+0040:  BTFSS  F81.1
+.................... goto l1  //testa outra condição 
+0042:  BRA    0048
+.................... goto verde1 
+0044:  BRA    0064
+.................... goto loop //vai para linha loop 
+0046:  BRA    0038
+....................  
+....................  
+.................... l1: // testa condição b0=1 (botão não pressionado) e b1=0(botão pressionado) 
+.................... btfss 0xf81.0 //testa o pino 0 da porta b e pula se 0(apertado) 
+0048:  BTFSS  F81.0
+.................... goto l2  //vai para linha l2 
+004A:  BRA    0054
+.................... btfsc 0xf81.1 //testa o pino 1 da porta b e pula se 1(não apertado) 
+004C:  BTFSC  F81.1
+.................... goto l2 //vai para linha l2 
+004E:  BRA    0054
+.................... goto verde1 
+0050:  BRA    0064
+.................... goto loop //vai para linha loop 
+0052:  BRA    0038
+....................  
+.................... l2:// testa condição b0=0 (botão  pressionado) e b1=0(botão pressionado) 
+.................... btfsc 0xf81.0//testa o pino 0 da porta b e pula se 0 
+0054:  BTFSC  F81.0
+.................... goto desliga //vai para linha desliga 
+0056:  BRA    0060
+.................... btfsc 0xf81.1 //testa o pino 1 da porta b e pula se 0 
+0058:  BTFSC  F81.1
+.................... goto desliga //vai para linha desliga 
+005A:  BRA    0060
+.................... //bcf  0xf83.0 liga pino 0  
+.................... goto desliga 
+005C:  BRA    0060
+.................... goto loop  //vai para linha loop 
+005E:  BRA    0038
+....................  
+.................... desliga: 
+.................... bcf  0xf83.0 // desliga o pino 0 
+0060:  BCF    F83.0
+.................... goto loop //vai pra subrotina loop 
+0062:  BRA    0038
+....................  
+....................  
+....................  
+....................  
+.................... //---------------------------------------------------------------------------------- 
+.................... verde1: 
+....................  movlw 0x22 //pino d1 
+0064:  MOVLW  22
+....................  movwf 0xF8C // declara latd(tabela) 
+0066:  MOVWF  F8C
+....................  movlw 0xFF // inicia a contagem dos 7 segundos(255) *Ao todo eram 428 sendo dividido em 255 e 173 
+0068:  MOVLW  FF
+....................  movwf dec_reg3 //(255) 
+006A:  MOVWF  07
+....................  //INSERIR CONDIÇÃO DOS BOTÕES AQUI 
+....................   
+.................... verde2: 
+....................  DECFSNZ dec_reg3 
+006C:  DCFSNZ 07,F
+....................  goto verde3 
+006E:  BRA    0076
+....................  call Delay100ms 
+0070:  CALL   0016,1
+....................  goto verde2 
+0074:  BRA    006C
+....................   
+.................... verde3: 
+....................  movlw 0xAD // continua a contagem dos 7 segundos(173) 
+0076:  MOVLW  AD
+....................  movwf dec_reg4 //(173) 
+0078:  MOVWF  08
+....................   
+.................... verde4: 
+....................  DECFSNZ dec_reg4 
+007A:  DCFSNZ 08,F
+....................  goto amarelo1 
+007C:  BRA    0084
+....................  call Delay100ms 
+007E:  CALL   0016,1
+....................  goto verde4 
+0082:  BRA    007A
+....................   
+.................... amarelo1: 
+....................  movlw 0x21 //pino d0 
+0084:  MOVLW  21
+....................  movwf 0xF8C // declara latd(tabela) 
+0086:  MOVWF  F8C
+....................  movlw 0x7A //conta 2 segundos(122) 
+0088:  MOVLW  7A
+....................  movwf dec_reg5 //(122) 
+008A:  MOVWF  09
+....................   
+.................... amarelo2: 
+....................  DECFSNZ dec_reg5 
+008C:  DCFSNZ 09,F
+....................  goto vermelho1 
+008E:  BRA    0096
+....................  call Delay100ms 
+0090:  CALL   0016,1
+....................  goto amarelo2 
+0094:  BRA    008C
+....................   
+.................... vermelho1:  //550 no total 
+....................  movlw 0x0C //pino d2 
+0096:  MOVLW  0C
+....................  movwf 0xF8C // declara latd(tabela) 
+0098:  MOVWF  F8C
+....................  movlw 0xFF //conta 7 segundos(255) 
+009A:  MOVLW  FF
+....................  movwf dec_reg6 //(255) 
+009C:  MOVWF  0A
+....................   
+.................... vermelho2: 
+....................  DECFSNZ dec_reg6 
+009E:  DCFSNZ 0A,F
+....................  goto vermelho3 
+00A0:  BRA    00A8
+....................  call Delay100ms 
+00A2:  CALL   0016,1
+....................  goto vermelho2 
+00A6:  BRA    009E
+....................   
+.................... vermelho3: 
+....................  movlw 0xAD //conta 7 segundos(255) 
+00A8:  MOVLW  AD
+....................  movwf dec_reg7 //(255) 
+00AA:  MOVWF  0B
+....................   
+.................... vermelho4: 
+....................  DECFSNZ dec_reg7 
+00AC:  DCFSNZ 0B,F
+....................  goto vermelho5 
+00AE:  BRA    00B6
+....................  call Delay100ms 
+00B0:  CALL   0016,1
+....................  goto vermelho4 
+00B4:  BRA    00AC
+....................   
+.................... vermelho5: 
+....................  movlw 0x14 //pino d2 
+00B6:  MOVLW  14
+....................  movwf 0xF8C // declara latd(tabela) 
+00B8:  MOVWF  F8C
+....................  movlw 0x7A //conta 2 segundos(122) 
+00BA:  MOVLW  7A
+....................  movwf dec_reg8 //(122) 
+00BC:  MOVWF  0C
+....................  
+.................... vermelho6: 
+....................  DECFSNZ dec_reg8 
+00BE:  DCFSNZ 0C,F
+....................  goto loop 
+00C0:  BRA    0038
+....................  call Delay100ms 
+00C2:  CALL   0016,1
+....................  goto vermelho6 
+00C6:  BRA    00BE
+....................   
+.................... loop3: 
+....................    clrf    0XF83 // limpa porta d 
+00C8:  CLRF   F83
+....................    call    Delay100ms // vai pra subrotina Delay100ms 
+00CA:  CALL   0016,1
+....................    movlw   0xff// w=ffh 
+00CE:  MOVLW  FF
+....................    movwf   0XF83 // porta d=11111111b 
+00D0:  MOVWF  F83
+....................    call    Delay100ms // vai pra subrotina Delay100ms 
+00D2:  CALL   0016,1
+....................    goto    loop3 //vai pra subrotina loop 
+00D6:  BRA    00C8
+.................... #endasm 
+.................... } 
+00D8:  SLEEP 
+
+Configuration Fuses:
+   Word  1: CC3F   PLL12 CPUDIV4 USBDIV HS FCMEN IESO
+   Word  2: 1E3E   PUT BROWNOUT BORV21 VREGEN NOWDT WDT32768
+   Word  3: 0700   CCP2C1 PBADEN LPT1OSC NOMCLR
+   Word  4: 00A1   STVREN NOLVP ICSP2 NOXINST NODEBUG
+   Word  5: C00F   NOPROTECT NOCPB NOCPD
+   Word  6: E00F   NOWRT NOWRTC NOWRTB NOWRTD
+   Word  7: 400F   NOEBTR NOEBTRB

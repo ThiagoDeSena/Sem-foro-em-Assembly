@@ -1,0 +1,20 @@
+[PROJECT]
+Target=ThiagoSemaforo.hex
+Processor_Text=PIC18F4550
+CCSVersion=5.007
+Compiler=PCH
+[Target Data]
+FileList=ThiagoSemaforo.c
+[Directories]
+Include=C:\Program Files (x86)\PICC\Devices\;C:\Program Files (x86)\PICC\Drivers\
+[ThiagoSemaforo.c]
+Type=4
+[mru-list]
+1=ThiagoSemaforo.c
+[Opened Files]
+1=..\Botões\botoes.c
+2=ThiagoSemaforo.c
+3=
+[Units]
+Count=1
+1=ThiagoSemaforo (main)

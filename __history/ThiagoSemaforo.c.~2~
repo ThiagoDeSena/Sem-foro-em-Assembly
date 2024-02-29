@@ -1,0 +1,80 @@
+#include <18f4550.h>
+#fuses hs,nowdt,noprotect,nolvp,NOMCLR
+void main()
+{
+ int delay_reg1;// declaração de variáveis
+ int delay_reg2;// declaração de variáveis
+ int dec_reg3;//variável do contador de decremeto para 6s nesta lógica
+ int dec_reg4;//variável do contador de decremeto para 2s nesta lógica
+ int dec_reg5; //variável do contador de decrementi para 8s nesta lógica
+#asm
+goto inicio // vai para label inicio
+Delay100ms:
+  movlw 0xFF //w=255d
+  movwf delay_reg1 // reg1=255d
+  movlw 0xFF // w=255d
+  movwf delay_reg2 // reg2=255d
+loop1:
+  DECFSZ delay_reg1 // decrementa e pula se igual a zero
+  goto loop2
+  goto exit
+loop2:
+  DECFSZ delay_reg2 // decrementa e pula se igual a zero
+  goto loop2
+  goto loop1
+Exit:
+  RETURN
+
+inicio:   
+ movlw  0x00  // 00h= pullup habilitado;80h=pullup desabilitado.
+ movwf  0xFF1 //intcon2=00h
+ movlw  0xFF  //w=11111111b
+ movwf  0xF93  //trisbB=11111111b
+ movlw  0x00 //w=00000000b
+ movwf  0xF95 // trisD=00000000b
+ movlw  0xE6 //w=11100110b
+// movwf  0xFD3 // Oscilador 4Mhz Sem cristal e capacitor $$$$
+verde1:
+ movlw 0x02 //pino d1
+ movwf 0xF8C // declara latd(tabela)
+ movlw 0xFF // conta 7 segundos(255)
+ movwf dec_reg3 //(255)
+ //INSERIR CONDIÇÃO DOS BOTÕES AQUI
+ 
+verde2:
+ DECFSNZ dec_reg3
+ goto verde3
+ call Delay100ms
+ goto verde2
+ 
+verde3:
+ movlw 0xAD
+ movwf dec_reg4
+ 
+verde4:
+ DECFSNZ dec_reg4
+ goto amarelo1
+ call Delay100ms
+ goto verde4
+ 
+amarelo1:
+ movlw 0x01 //pino d0
+ movwf 0xF8C // declara latd(tabela)
+ movlw 0x7A //conta 2 segundos(122)
+ movwf dec_reg5 //(122)
+ 
+amarelo2:
+ DECFSNZ dec_reg5
+ goto verde1
+ call Delay100ms
+ goto amarelo2
+ 
+loop:
+   clrf    0XF83 // limpa porta d
+   call    Delay100ms // vai pra subrotina Delay100ms
+   movlw   0xff// w=ffh
+   movwf   0XF83 // porta d=11111111b
+   call    Delay100ms // vai pra subrotina Delay100ms
+   goto    loop //vai pra subrotina loop
+#endasm
+}
