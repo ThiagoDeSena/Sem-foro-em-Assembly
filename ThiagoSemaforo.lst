@@ -1,4 +1,4 @@
-CCS PCH C Compiler, Version 5.007, 61971               29-fev-24 17:16
+CCS PCH C Compiler, Version 5.007, 61971               01-mar-24 11:15
 
                Filename:   C:\Users\Thiago de sena\Documents\CCS C Projects\semaforo_Thiago\ThiagoSemaforo.lst
 
@@ -88,37 +88,37 @@ CCS PCH C Compiler, Version 5.007, 61971               29-fev-24 17:16
 0038:  MOVLW  40
 .................... movwf 0xF8C // declara latd(tabela) 
 003A:  MOVWF  F8C
-.................... btfsc 0xf81.0 //testa o pino 0 da porta b e pula se 1(apertado) 
-003C:  BTFSC  F81.0
+.................... btfsc 0xf81.3 //testa o pino 0 da porta b e pula se 1(apertado) 
+003C:  BTFSC  F81.3
 .................... goto l1   // testa outra condição 
 003E:  BRA    0048
 .................... btfss 0xf81.1 //testa o pino 1 da porta b e pula se 0(não apertado) 
 0040:  BTFSS  F81.1
 .................... goto l1  //testa outra condição 
 0042:  BRA    0048
-.................... goto verde1 
-0044:  BRA    0064
+.................... goto desliga 
+0044:  BRA    0060
 .................... goto loop //vai para linha loop 
 0046:  BRA    0038
 ....................  
 ....................  
 .................... l1: // testa condição b0=1 (botão não pressionado) e b1=0(botão pressionado) 
-.................... btfss 0xf81.0 //testa o pino 0 da porta b e pula se 0(apertado) 
-0048:  BTFSS  F81.0
+.................... btfss 0xf81.3 //testa o pino 0 da porta b e pula se 0(apertado) 
+0048:  BTFSS  F81.3
 .................... goto l2  //vai para linha l2 
 004A:  BRA    0054
 .................... btfsc 0xf81.1 //testa o pino 1 da porta b e pula se 1(não apertado) 
 004C:  BTFSC  F81.1
 .................... goto l2 //vai para linha l2 
 004E:  BRA    0054
-.................... goto verde1 
-0050:  BRA    0064
+.................... goto desliga 
+0050:  BRA    0060
 .................... goto loop //vai para linha loop 
 0052:  BRA    0038
 ....................  
 .................... l2:// testa condição b0=0 (botão  pressionado) e b1=0(botão pressionado) 
-.................... btfsc 0xf81.0//testa o pino 0 da porta b e pula se 0 
-0054:  BTFSC  F81.0
+.................... btfsc 0xf81.3//testa o pino 0 da porta b e pula se 0 
+0054:  BTFSC  F81.3
 .................... goto desliga //vai para linha desliga 
 0056:  BRA    0060
 .................... btfsc 0xf81.1 //testa o pino 1 da porta b e pula se 0 
@@ -126,8 +126,8 @@ CCS PCH C Compiler, Version 5.007, 61971               29-fev-24 17:16
 .................... goto desliga //vai para linha desliga 
 005A:  BRA    0060
 .................... //bcf  0xf83.0 liga pino 0  
-.................... goto desliga 
-005C:  BRA    0060
+.................... goto verde1 
+005C:  BRA    0064
 .................... goto loop  //vai para linha loop 
 005E:  BRA    0038
 ....................  

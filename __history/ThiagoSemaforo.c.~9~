@@ -42,29 +42,29 @@ inicio:
 loop: // testa condição b0=0 (botão pressionado) e b1=1(botão não pressionado)
 movlw 0x40 //pino d6
 movwf 0xF8C // declara latd(tabela)
-btfsc 0xf81.3 //testa o pino 0 da porta b e pula se 1(apertado)
+btfsc 0xf81.0 //testa o pino 0 da porta b e pula se 1(apertado)
 goto l1   // testa outra condição
 btfss 0xf81.1 //testa o pino 1 da porta b e pula se 0(não apertado)
 goto l1  //testa outra condição
-goto desliga
+goto verde1
 goto loop //vai para linha loop
 
 
 l1: // testa condição b0=1 (botão não pressionado) e b1=0(botão pressionado)
-btfss 0xf81.3 //testa o pino 0 da porta b e pula se 0(apertado)
+btfss 0xf81.0 //testa o pino 0 da porta b e pula se 0(apertado)
 goto l2  //vai para linha l2
 btfsc 0xf81.1 //testa o pino 1 da porta b e pula se 1(não apertado)
 goto l2 //vai para linha l2
-goto desliga
+goto verde1
 goto loop //vai para linha loop
 
 l2:// testa condição b0=0 (botão  pressionado) e b1=0(botão pressionado)
-btfsc 0xf81.3//testa o pino 0 da porta b e pula se 0
+btfsc 0xf81.0//testa o pino 0 da porta b e pula se 0
 goto desliga //vai para linha desliga
 btfsc 0xf81.1 //testa o pino 1 da porta b e pula se 0
 goto desliga //vai para linha desliga
 //bcf  0xf83.0 liga pino 0 
-goto verde1
+goto desliga
 goto loop  //vai para linha loop
 
 desliga:

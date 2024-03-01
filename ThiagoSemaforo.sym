@@ -40,9 +40,9 @@ ROM Allocation:
 0014  exit
 001C  loop
 0024  l1
-0032  verde1
-002A  l2
 0030  desliga
+002A  l2
+0032  verde1
 0036  verde2
 003B  verde3
 003D  verde4
@@ -60,10 +60,10 @@ Project Directory:
     C:\Users\Thiago de sena\Documents\CCS C Projects\semaforo_Thiago\
 
 Project Files:
-    ThiagoSemaforo.c                                        [29-fev-24 16:52  CRC=CEB31774]
+    ThiagoSemaforo.c                                        [01-mar-24 11:14  CRC=37725C5C]
     ..\..\..\..\..\Program Files (x86)\PICC\Devices\18f4550.h [21-jun-13 16:05  CRC=A157EDDE]
 
-Source signature=1162F330
+Source signature=7A223818
 
 Units:
     ThiagoSemaforo (main)
